@@ -1,0 +1,35 @@
+{
+  "timeout": 180000,
+  "dataController": {
+    "attempt": 1,
+    "maxAttempts": 3
+  },
+  "chromeService": {
+    "wsPath": "http://127.0.0.1:9222/json/version"
+  },
+  "clickController": {
+    "profileUrl": "https://www.linkedin.com/in/elad-sheskin/",
+    "pageUrls": [
+      "https://www.linkedin.com/company/36162693/admin/feed/posts/",
+      "https://www.linkedin.com/company/34334820/admin/feed/posts/",
+      "https://www.linkedin.com/company/99922653/admin/feed/posts/",
+      "https://www.linkedin.com/company/100070299/admin/feed/posts/",
+      "https://www.linkedin.com/company/99941623/admin/feed/posts/",
+      "https://www.linkedin.com/showcase/90919225/admin/feed/posts/"
+    ],
+    "urls": [
+      "https://www.linkedin.com/in/adir-duchan/recent-activity/all/",
+      "https://www.linkedin.com/in/yoseph-haddad-a97a47198/recent-activity/all/",
+      "https://www.linkedin.com/in/dagan-lev-ari/recent-activity/all/",
+      "https://www.linkedin.com/in/gur-ben-ze-ev-56156a2/recent-activity/all/"
+    ]
+  },
+  "slack": {
+  "linkedin": "https://hooks.slack.com/services/{COMPLETE_WITH_LINKEDIN_HOOK}"
+  },
+  "getRandom": {
+    "delayMin": 1000,
+    "delayMax": 3000,
+    "factor": 5
+  }
+}
