@@ -75,7 +75,7 @@ const clickController = ({ schema, envService, chromeService, wait, puppeteer, i
             urlText
           ); // Replace 'Your text goes here' with the desired text
 
-          console.log('Url text entered into the contenteditable element.', urlText);
+          console.log('Url text entered into the contenteditable element.\n', urlText);
           await wait({ schema });
           // Click the "Post" button
           const postButton = await page.$('button.share-actions__primary-action');
@@ -133,7 +133,7 @@ const clickController = ({ schema, envService, chromeService, wait, puppeteer, i
             urlText
           ); // Replace 'Your text goes here' with the desired text
 
-          console.log('Url text entered into the contenteditable element.', urlText);
+          console.log('Url text entered into the contenteditable element.\n', urlText);
           await wait({ schema });
           // Click the "Post" button
           const postButton = await page.$('button.share-actions__primary-action');
@@ -154,6 +154,44 @@ const clickController = ({ schema, envService, chromeService, wait, puppeteer, i
         console.error('Element not found.');
         return Promise.reject();
       }
+    };
+
+    const postToPages = async ({ page, urlText, pageUrls }) => {
+      await pageUrls.reduce(async (accumulatorPromise, pageUrl, index) => {
+        await accumulatorPromise; // Wait for the previous iteration to complete
+        console.log({ msg: 'opened new tab' });
+
+        const dataUrnValuesPart = await postToPage({ urlText, page, pageUrl });
+        await wait({ schema });
+        await wait({ schema });
+        console.log(`Data-urn page values${index + 1}:`, dataUrnValuesPart);
+
+        return dataUrnValuesPart;
+      }, Promise.resolve());
+    };
+
+    const getDataFromPages = async ({ page, url, urls, dataUrnValues }) => {
+      await urls.reduce(async (accumulatorPromise, url, index) => {
+        await accumulatorPromise; // Wait for the previous iteration to complete
+
+        console.log({ msg: 'opened new tab' });
+        await page.goto(url, { waitUntil: 'load' });
+
+        const dataUrnValuesPart = await getPageResults({ page });
+        console.log(`Data-urn values${index + 1}:`, dataUrnValuesPart);
+        dataUrnValues.push(...dataUrnValuesPart);
+        return dataUrnValuesPart;
+      }, Promise.resolve());
+    };
+
+    const getUrlToPost = async ({ page, urlText, dataUrnValues }) => {
+      if (!dataUrnValues || !dataUrnValues.length) return console.log({ msg: 'no data-urn values' });
+      tablesResponse = dataUrnValues;
+      const urlTestArr = createUrlTestArr({ dataUrnValues });
+      const urlTextAsArr = getRandomItem({ arr: urlTestArr });
+      urlText = urlTextAsArr[0];
+      console.log({ msg: `urlText: ${urlText}` });
+      return urlText;
     };
 
     const { timeout } = schema;
@@ -179,39 +217,12 @@ const clickController = ({ schema, envService, chromeService, wait, puppeteer, i
 
       // Go to linkedin page
       let dataUrnValues = [];
-      await urls.reduce(async (accumulatorPromise, url, index) => {
-        await accumulatorPromise; // Wait for the previous iteration to complete
-
-        console.log({ msg: 'opened new tab' });
-        await page.goto(url, { waitUntil: 'load' });
-
-        const dataUrnValuesPart = await getPageResults({ page });
-        console.log(`Data-urn values${index + 1}:`, dataUrnValuesPart);
-        dataUrnValues = [...dataUrnValues, ...dataUrnValuesPart];
-        return dataUrnValuesPart;
-      }, Promise.resolve());
-
-      if (!dataUrnValues || !dataUrnValues.length) return console.log({ msg: 'no data-urn values' });
-      tablesResponse = dataUrnValues;
-      const urlTestArr = createUrlTestArr({ dataUrnValues });
-      const urlTextAsArr = getRandomItem({ arr: urlTestArr });
-      urlText = urlTextAsArr[0];
-
+      await getDataFromPages({ page, url: profileUrl, urls, dataUrnValues });
+      urlText = await getUrlToPost({ page, urlText, dataUrnValues });
       await postToProfile({ profileUrl, urlText, page });
-
       await wait({ schema });
       await wait({ schema });
-      await pageUrls.reduce(async (accumulatorPromise, pageUrl, index) => {
-        await accumulatorPromise; // Wait for the previous iteration to complete
-        console.log({ msg: 'opened new tab' });
-
-        const dataUrnValuesPart = await postToPage({ urlText, page, pageUrl });
-        await wait({ schema });
-        await wait({ schema });
-        console.log(`Data-urn page values${index + 1}:`, dataUrnValuesPart);
-
-        return dataUrnValuesPart;
-      }, Promise.resolve());
+      await postToPages({ page, urlText, pageUrls });
     } catch (error) {
       console.log({ msg: error });
     } finally {

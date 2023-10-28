@@ -1,0 +1,18 @@
+{"msg":"Getting WebSocketDebuggerUrl"}
+{"msg":{"Browser":"Chrome/118.0.5993.117","Protocol-Version":"1.3","User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36","V8-Version":"11.8.172.16","WebKit-Version":"537.36 (@fdb2355de50518294b88ace7bc851820dc38aa82)","webSocketDebuggerUrl":"ws://127.0.0.1:9222/devtools/browser/e18933bd-ef23-4da8-bc9f-05d3bbad0a1b"}}
+{"msg":"opened new tab"}
+"Data-urn values1:" ["urn:li:activity:7124045625163231232","urn:li:activity:7123981453524185088","urn:li:activity:7123965649629888513","urn:li:activity:7123910261828112384","urn:li:activity:7123707209456189440"]
+{"msg":"opened new tab"}
+"Data-urn values2:" ["urn:li:activity:7124016591222059008","urn:li:activity:7124006971241816064","urn:li:activity:7123929079816331264","urn:li:activity:7123906758099558400","urn:li:activity:7123899011131973632"]
+{"msg":"opened new tab"}
+"Data-urn values3:" ["urn:li:activity:7123674657001488386","urn:li:activity:7123663955939536898","urn:li:activity:7123641132126732288","urn:li:activity:7123640569402146817","urn:li:activity:7123639984451969024"]
+{"msg":"opened new tab"}
+"Data-urn values4:" ["urn:li:activity:7124034544386621440","urn:li:activity:7124032184927019008","urn:li:activity:7124025265797619712","urn:li:activity:7124023337558716417","urn:li:activity:7124019805409452032"]
+{"msg":"urlText: https://www.linkedin.com/feed/update/urn:li:activity:7123639984451969024/"}
+"Clicked on \"Create a post\" button."
+"Url text entered into the contenteditable element.\n" "https://www.linkedin.com/feed/update/urn:li:activity:7123639984451969024/"
+{"msg":"opened new tab"}
+"Clicked on \"Create a post\" button."
+"Clicked on \"Post\" button."
+"Url text entered into the contenteditable element.\n" "https://www.linkedin.com/feed/update/urn:li:activity:7123639984451969024/"
+{"msg":{"name":"ProtocolError","message":"Runtime.callFunctionOn timed out. Increase the 'protocolTimeout' setting in launch/connect calls for a higher timeout if needed."}}

@@ -1,0 +1,6 @@
+{"msg":"Getting WebSocketDebuggerUrl"}
+{"msg":{"Browser":"Chrome/118.0.5993.117","Protocol-Version":"1.3","User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36","V8-Version":"11.8.172.16","WebKit-Version":"537.36 (@fdb2355de50518294b88ace7bc851820dc38aa82)","webSocketDebuggerUrl":"ws://127.0.0.1:9222/devtools/browser/e18933bd-ef23-4da8-bc9f-05d3bbad0a1b"}}
+{"msg":"opened new tab"}
+"Data-urn values1:" ["urn:li:activity:7123981453524185088","urn:li:activity:7123965649629888513","urn:li:activity:7123910261828112384","urn:li:activity:7123707209456189440","urn:li:activity:7123567896307326976"]
+{"msg":{}}
+{"msg":"no html data. Trying again, attempt 2/3"}
