@@ -264,6 +264,9 @@ const clickController = ({ schema, envService, chromeService, wait, puppeteer, i
       await page.goto(url, { waitUntil: 'load' });
 
       await autoScroll({ page, times: 10 });
+      //make sure this works. scroll-reply-repeatedly
+      await selectAndClick({ selector: '[data-testid="reply"]' });
+
       let postsDivs = await getPageResults({ page, selector: 'div[data-testid="cellInnerDiv"]', attribute: 'style' });
       console.log({ msg: `postsDivs: ${postsDivs}` });
       await wait({ schema });
@@ -272,8 +275,6 @@ const clickController = ({ schema, envService, chromeService, wait, puppeteer, i
       postsDivs = await getPageResults({ page, selector: 'div[data-testid="cellInnerDiv"]', attribute: 'style' });
       console.log({ msg: `postsDivs: ${postsDivs}` });
       await wait({ schema });
-
-      await selectAndClick({ selector: '[data-testid="reply"]' });
 
       urlText = await getUrlToPost({ page, urlText, dataUrnValues });
       await postToProfile({ profileUrl, urlText, page });
