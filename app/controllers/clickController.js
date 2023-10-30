@@ -210,6 +210,32 @@ const clickController = ({ schema, envService, chromeService, wait, puppeteer, i
       }
     };
 
+    const autoScroll = async ({ page, times }) => {
+      let counter = 0;
+      console.log('autoScrolling...');
+      await page.evaluate(
+        async (times, counter) => {
+          await new Promise((resolve) => {
+            var totalHeight = 0;
+            var distance = 100;
+            var timer = setInterval(() => {
+              console.log('scrolling...');
+              var scrollHeight = document.body.scrollHeight;
+              window.scrollBy(0, distance);
+              totalHeight += distance;
+              counter++;
+              if (counter === times || totalHeight >= scrollHeight - window.innerHeight) {
+                clearInterval(timer);
+                resolve();
+              }
+            }, 3000);
+          });
+        },
+        times,
+        counter
+      );
+    };
+
     const { timeout } = schema;
     let currentURL;
     const { webSocketDebuggerUrl: wsChromeEndpointurl } = await chromeService.getWebSocketDebuggerUrl({ msg: 'Getting WebSocketDebuggerUrl' });
@@ -236,7 +262,17 @@ const clickController = ({ schema, envService, chromeService, wait, puppeteer, i
       // await getDataFromPages({ page, url: profileUrl, urls, dataUrnValues });
       const url = 'https://twitter.com/qatarairways';
       await page.goto(url, { waitUntil: 'load' });
-      const postsDivs = await getPageResults({ page, selector: 'div[data-testid="cellInnerDiv"]', attribute: 'style' });
+
+      await autoScroll({ page, times: 10 });
+      let postsDivs = await getPageResults({ page, selector: 'div[data-testid="cellInnerDiv"]', attribute: 'style' });
+      console.log({ msg: `postsDivs: ${postsDivs}` });
+      await wait({ schema });
+
+      await autoScroll({ page, times: 10 });
+      postsDivs = await getPageResults({ page, selector: 'div[data-testid="cellInnerDiv"]', attribute: 'style' });
+      console.log({ msg: `postsDivs: ${postsDivs}` });
+      await wait({ schema });
+
       await selectAndClick({ selector: '[data-testid="reply"]' });
 
       urlText = await getUrlToPost({ page, urlText, dataUrnValues });
