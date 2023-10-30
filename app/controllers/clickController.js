@@ -22,22 +22,26 @@ const clickController = ({ schema, envService, chromeService, wait, puppeteer, i
       return shuffledArr.slice(0, count); // Return the first `count` elements
     };
 
-    const getPageResults = async ({ page }) => {
+    const getPageResults = async ({ page, selector, attribute }) => {
       await wait({ schema });
       await wait({ schema });
-      const dataUrnValues = await page.evaluate(() => {
-        const dataUrnElements = document.querySelectorAll('div[data-urn]');
-        const urnValues = [];
+      const dataUrnValues = await page.evaluate(
+        (selector, attribute) => {
+          const dataUrnElements = document.querySelectorAll(selector);
+          const urnValues = [];
 
-        dataUrnElements.forEach((element) => {
-          const dataUrn = element.getAttribute('data-urn');
-          if (dataUrn) {
-            urnValues.push(dataUrn);
-          }
-        });
+          dataUrnElements.forEach((element) => {
+            const dataUrn = element.getAttribute(attribute);
+            if (dataUrn) {
+              urnValues.push(dataUrn);
+            }
+          });
 
-        return urnValues;
-      });
+          return urnValues;
+        },
+        selector,
+        attribute
+      );
       return dataUrnValues;
     };
 
@@ -177,7 +181,7 @@ const clickController = ({ schema, envService, chromeService, wait, puppeteer, i
         console.log({ msg: 'opened new tab' });
         await page.goto(url, { waitUntil: 'load' });
 
-        const dataUrnValuesPart = await getPageResults({ page });
+        const dataUrnValuesPart = await getPageResults({ page, selector: 'div[data-urn]', attribute: 'data-urn' });
         console.log(`Data-urn values${index + 1}:`, dataUrnValuesPart);
         dataUrnValues.push(...dataUrnValuesPart);
         return dataUrnValuesPart;
@@ -192,6 +196,18 @@ const clickController = ({ schema, envService, chromeService, wait, puppeteer, i
       urlText = urlTextAsArr[0];
       console.log({ msg: `urlText: ${urlText}` });
       return urlText;
+    };
+
+    const selectAndClick = async ({ selector }) => {
+      try {
+        // Find the button by its role attribute
+        const button = await page.waitForSelector(selector, { visible: true });
+        // Click the button
+        button && (await button.click());
+        console.log(`Element with selector:${selector} clicked successfully!`);
+      } catch (error) {
+        console.error('Error:', error);
+      }
     };
 
     const { timeout } = schema;
@@ -217,7 +233,12 @@ const clickController = ({ schema, envService, chromeService, wait, puppeteer, i
 
       // Go to linkedin page
       let dataUrnValues = [];
-      await getDataFromPages({ page, url: profileUrl, urls, dataUrnValues });
+      // await getDataFromPages({ page, url: profileUrl, urls, dataUrnValues });
+      const url = 'https://twitter.com/qatarairways';
+      await page.goto(url, { waitUntil: 'load' });
+      const postsDivs = await getPageResults({ page, selector: 'div[data-testid="cellInnerDiv"]', attribute: 'style' });
+      await selectAndClick({ selector: '[data-testid="reply"]' });
+
       urlText = await getUrlToPost({ page, urlText, dataUrnValues });
       await postToProfile({ profileUrl, urlText, page });
       await wait({ schema });
